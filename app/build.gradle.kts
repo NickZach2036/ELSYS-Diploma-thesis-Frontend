@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -80,4 +81,16 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     implementation(libs.koin.navigation)
+
+    // Retrofit
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.converter.gson)
+
+    implementation(libs.converter.scalars)
+
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.converter)
 }
