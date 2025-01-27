@@ -3,6 +3,7 @@ package com.example.elsysdiplomathesisfrontend.ui.theme.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.core.os.bundleOf
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,14 +21,16 @@ fun ThNavHost(navController: NavHostController) {
         popExitTransition = { ExitTransition.None }
 
     ) {
-        composable(Screen.QR_SCANNER) {
-            QRScannerScreenWithUI(navController)
+        composable(
+            Screen.QR_SCANNER,
+        ) {
+            QRScannerScreenWithUI {
+                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
+            }
         }
-        composable(Screen.DUMMY) {
-            DummyScreen()
+        composable(Screen.DUMMY) { backStack ->
+            val value = backStack.arguments?.getString("id") ?: ""
+            DummyScreen(value)
         }
     }
-
-
 }
-
