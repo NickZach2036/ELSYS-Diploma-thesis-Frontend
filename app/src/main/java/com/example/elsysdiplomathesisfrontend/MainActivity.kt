@@ -4,19 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.elsysdiplomathesisfrontend.ui.theme.ElsysDiplomaThesisFrontendTheme
-import qrscanner.QRScannerScreen
-import qrscanner.QRScannerScreenWithUI
+import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.ThNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +25,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navHost = rememberNavController()
             ElsysDiplomaThesisFrontendTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    QRScannerScreenWithUI (navHost)
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .systemBarsPadding()
+                ) { innerPadding ->
+                    Box(Modifier.padding(innerPadding)) {
+                        ThNavHost(navHost)
+                    }
                 }
             }
         }

@@ -1,4 +1,6 @@
 package com.example.elsysdiplomathesisfrontend.ui.theme.navigation
 
-class Constants {
+object Screen {
+    const val QR_SCANNER = "qr_scanner"
+    const val DUMMY = "dummy_screen"
 }

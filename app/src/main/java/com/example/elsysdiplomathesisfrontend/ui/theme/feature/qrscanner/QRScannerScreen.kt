@@ -1,4 +1,4 @@
-package qrscanner
+package com.example.elsysdiplomathesisfrontend.ui.theme.feature.qrscanner
 
 import android.util.Log
 import android.util.Size
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.Screen
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.launch
@@ -108,8 +109,10 @@ fun QRScannerScreenWithUI(navController: NavController) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         QRScannerScreen { scannedValue ->
+            Log.e("QRScanner", "Camera binding sucess")
+
             Toast.makeText(context, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
-            // Navigate or use scannedValue
+            navController.navigate(Screen.DUMMY)
         }
 
         Column(
