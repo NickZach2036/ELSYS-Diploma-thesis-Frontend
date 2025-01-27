@@ -1,4 +1,4 @@
-package com.example.elsysdiplomathesisfrontend.ui.theme.navigation
+package com.example.elsysdiplomathesisfrontend.ui.navigation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
