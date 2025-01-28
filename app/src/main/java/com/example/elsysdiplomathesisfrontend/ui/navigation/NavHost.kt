@@ -34,7 +34,7 @@ fun ThNavHost(navController: NavHostController) {
             val viewModel = getViewModel<DummyViewModel>()
             val state by viewModel.text.collectAsStateWithLifecycle()
             val value = backStack.arguments?.getString("id") ?: ""
-            DummyScreen(stateValue = state, id = value)
+            DummyScreen(stateValue = state, id = value, login = { viewModel.login() })
         }
     }
 }

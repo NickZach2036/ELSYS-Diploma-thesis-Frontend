@@ -1,5 +1,8 @@
 package com.example.elsysdiplomathesisfrontend
 
+import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
+import com.example.elsysdiplomathesisfrontend.data.service.AuthService
+import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -18,7 +21,15 @@ object RetrofitConstants {
 }
 
 val appModules = module {
-    viewModel { DummyViewModel() }
+    single<AuthService> {
+        get<Retrofit>().create(AuthService::class.java)
+    }
+
+    factory<AuthRepository> {
+        AuthRepositoryImpl(get<AuthService>())
+    }
+
+    viewModel { DummyViewModel(get<AuthRepository>()) }
 
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
@@ -39,7 +50,7 @@ val appModules = module {
             explicitNulls = false
         }
 
-        Retrofit.Builder().baseUrl("localhost:2999")
+        Retrofit.Builder().baseUrl("http://192.168.2.250:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())

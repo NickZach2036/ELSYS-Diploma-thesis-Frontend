@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ElsysDiplomaThesisFrontend"
         android:name=".ThesisApplication"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
