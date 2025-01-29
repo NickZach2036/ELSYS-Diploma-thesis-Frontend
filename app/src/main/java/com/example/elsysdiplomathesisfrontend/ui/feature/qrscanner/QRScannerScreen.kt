@@ -6,18 +6,32 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
-import androidx.camera.core.*
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -37,7 +51,8 @@ fun QRScannerScreen(
 
     var hasScanned by remember { mutableStateOf(false) }
 
-    var cameraPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    var cameraPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
 
@@ -52,30 +67,26 @@ fun QRScannerScreen(
 
         val barcodeScanner = BarcodeScanning.getClient()
 
-        val imageAnalysis = ImageAnalysis.Builder()
-            .setTargetResolution(Size(1280, 720))
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
+        val imageAnalysis = ImageAnalysis.Builder().setTargetResolution(Size(1280, 720))
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST).build()
 
         imageAnalysis.setAnalyzer(executor, { imageProxy ->
             val mediaImage = imageProxy.image
             if (mediaImage != null && !hasScanned) {
-                val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                barcodeScanner.process(inputImage)
-                    .addOnSuccessListener { barcodes ->
-                        for (barcode in barcodes) {
-                            barcode.rawValue?.let {
-                                hasScanned = true
-                                onScanned(it)
-                            }
+                val inputImage =
+                    InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                barcodeScanner.process(inputImage).addOnSuccessListener { barcodes ->
+                    for (barcode in barcodes) {
+                        barcode.rawValue?.let {
+                            hasScanned = true
+                            onScanned(it)
                         }
                     }
-                    .addOnFailureListener {
-                        Log.e("QRScanner", "Scanning failed: ${it.message}")
-                    }
-                    .addOnCompleteListener {
-                        imageProxy.close()
-                    }
+                }.addOnFailureListener {
+                    Log.e("QRScanner", "Scanning failed: ${it.message}")
+                }.addOnCompleteListener {
+                    imageProxy.close()
+                }
             } else {
                 imageProxy.close()
             }
@@ -86,10 +97,7 @@ fun QRScannerScreen(
         try {
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                preview,
-                imageAnalysis
+                lifecycleOwner, cameraSelector, preview, imageAnalysis
             )
         } catch (e: Exception) {
             Log.e("QRScanner", "Camera binding failed: ${e.message}")
@@ -98,23 +106,37 @@ fun QRScannerScreen(
 }
 
 @Composable
-fun QRScannerScreenWithUI(onNavigate: () -> Unit) {
+fun QRScannerScreenWithUI(
+    onQRScanned: () -> Unit, onLoginClicked: () -> Unit
+) {
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         QRScannerScreen { scannedValue ->
             Log.e("QRScanner", "Camera binding sucess")
-            onNavigate()
+            onQRScanned()
             Toast.makeText(context, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
-
         }
 
         Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.BottomCenter),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Сканирайте QR код на метростанция", color = Color.White, fontWeight = FontWeight.Bold)
+            Text(
+                "Сканирайте QR код на метростанция",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Button(
+            onClick = { onLoginClicked() },
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue),
+            enabled = true,
+            shape = RoundedCornerShape(5.dp),
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            Text("Влез", color = Color.White)
         }
     }
 }

@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Elsys Diploma Thesis Frontend</string>
+    <string name="app_name">Станция+</string>
+    <string name="login">Влез</string>
+    <string name="sign_up">Регистрирай се</string>
+    <string name="username">потребителско име</string>
+    <string name="password">парола</string>
 </resources>

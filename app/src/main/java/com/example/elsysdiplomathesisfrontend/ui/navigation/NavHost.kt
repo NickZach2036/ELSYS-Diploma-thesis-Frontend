@@ -9,6 +9,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginScreen
+import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerScreenWithUI
@@ -16,8 +18,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ThNavHost(navController: NavHostController) {
-    NavHost(
-        navController = navController,
+    NavHost(navController = navController,
         startDestination = Screen.QR_SCANNER,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
@@ -26,15 +27,39 @@ fun ThNavHost(navController: NavHostController) {
 
     ) {
         composable(Screen.QR_SCANNER) {
-            QRScannerScreenWithUI {
-                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
-            }
+            QRScannerScreenWithUI(onQRScanned = {
+                navController.navigate(
+                    route = Screen.DUMMY, args = bundleOf("id" to "123")
+                )
+            }, onLoginClicked = {
+                navController.navigate(
+                    route = Screen.LOGIN
+                )
+            })
         }
+
         composable(Screen.DUMMY) { backStack ->
             val viewModel = getViewModel<DummyViewModel>()
             val state by viewModel.text.collectAsStateWithLifecycle()
             val value = backStack.arguments?.getString("id") ?: ""
             DummyScreen(stateValue = state, id = value, login = { viewModel.login() })
+        }
+
+        composable(Screen.LOGIN) { backStack ->
+            val viewModel = getViewModel<LoginViewModel>()
+            val state by viewModel.loginData.collectAsStateWithLifecycle()
+
+            LoginScreen(
+                stateValue = state,
+                onLoginClicked = {
+                    navController.navigate(
+                        route = Screen.QR_SCANNER
+                    )
+                },
+                onUsernameChange = { viewModel.updateUsername(it) },
+                onPasswordChange = { viewModel.updatePassword(it) },
+                onVisibilityChange = { viewModel.updateVisibility(it) }
+            )
         }
     }
 }

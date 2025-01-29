@@ -3,6 +3,7 @@ package com.example.elsysdiplomathesisfrontend
 import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
+import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -31,6 +32,8 @@ val appModules = module {
 
     viewModel { DummyViewModel(get<AuthRepository>()) }
 
+    viewModel { LoginViewModel() }
+
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -38,8 +41,7 @@ val appModules = module {
         OkHttpClient().newBuilder().addInterceptor(interceptor)
             .connectTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS)
             .readTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS)
-            .writeTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS)
-            .build()
+            .writeTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS).build()
     }
 
     single {
@@ -51,10 +53,8 @@ val appModules = module {
         }
 
         Retrofit.Builder().baseUrl("http://192.168.2.250:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
     }
 }

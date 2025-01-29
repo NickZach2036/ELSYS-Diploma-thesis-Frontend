@@ -1,4 +1,7 @@
 package com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen
 
-class LoginData {
-}
+data class LoginData(
+    val username: String = "",
+    val password: String = "",
+    val visibility: Boolean = false,
+)
