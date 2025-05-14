@@ -1,8 +1,11 @@
 package com.example.elsysdiplomathesisfrontend
 
 import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
+import com.example.elsysdiplomathesisfrontend.data.repository.LandmarkRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
+import com.example.elsysdiplomathesisfrontend.data.service.LandmarkService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
+import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
@@ -25,8 +28,16 @@ val appModules = module {
         get<Retrofit>().create(AuthService::class.java)
     }
 
+    single<LandmarkService> {
+        get<Retrofit>().create(LandmarkService::class.java)
+    }
+
     factory<AuthRepository> {
         AuthRepositoryImpl(get())
+    }
+
+    factory<LandmarkRepository> {
+        LandmarkRepositoryImpl(get())
     }
 
     viewModel { DummyViewModel(get()) }
