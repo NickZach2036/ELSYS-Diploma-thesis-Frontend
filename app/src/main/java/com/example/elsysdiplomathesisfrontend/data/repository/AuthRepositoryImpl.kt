@@ -6,23 +6,33 @@ import com.example.elsysdiplomathesisfrontend.data.service.AuthService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 
 class AuthRepositoryImpl(private val authService: AuthService) : AuthRepository {
-    override suspend fun login(username: String, password: String): Result<Unit> {
-        val result = authService.login(Login(username, password))
 
-        try {
-            return if (result.isSuccessful) {
-                result.body()?.let { token ->
-                    Log.d("TAG", "token: $token")
+    override suspend fun login(username: String, password: String): Result<Unit> {
+        return try {
+            val result = authService.login(Login(username, password))
+            if (result.isSuccessful) {
+                val token = result.body()?.data?.accessToken
+                if (token != null) {
+                    Log.d("AuthRepositoryImpl", "Token: $token")
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Throwable("No token in response"))
                 }
-                Result.success(Unit)
             } else {
-                val message = result.errorBody()?.toString()
-                Log.d("TAG", "token: $message")
-                Result.failure(Throwable(message))
+                Result.failure(Throwable("Login failed: ${result.errorBody()?.string()}"))
             }
-        } catch(exception: Exception) {
-            Log.d("TAG", "token: ${exception.message}")
-            return Result.failure(Throwable(exception.message))
+        } catch (e: Exception) {
+            Result.failure(Throwable(e.message))
+        }
+    }
+
+    override suspend fun register(username: String, password: String): Result<Unit> {
+        return try {
+            val response = authService.register(Login(username, password))
+            Log.d("AuthRepositoryImpl", "Registered with token: ${response.data.accessToken}")
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(Throwable(e.message))
         }
     }
 }

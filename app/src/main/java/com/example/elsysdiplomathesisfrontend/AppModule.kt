@@ -6,9 +6,7 @@ import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,14 +26,16 @@ val appModules = module {
     }
 
     factory<AuthRepository> {
-        AuthRepositoryImpl(get<AuthService>())
+        AuthRepositoryImpl(get())
     }
 
-    viewModel { DummyViewModel(get<AuthRepository>()) }
+    viewModel { DummyViewModel(get()) }
 
-    viewModel { LoginViewModel() }
+    viewModel { LoginViewModel(get()) }
 
-    viewModel { SignUpViewModel() }
+    viewModel { SignUpViewModel(get()) }
+
+    viewModel { StationViewModel(get()) }
 
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
@@ -49,15 +49,11 @@ val appModules = module {
 
     single {
         val okHttpClient = get<OkHttpClient>()
-
-        val json = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-        }
-
-        Retrofit.Builder().baseUrl("http://172.161.136.71:3000/")
-            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient)
+        Retrofit.Builder()
+            .baseUrl("http://172.161.136.71:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
+            .client(okHttpClient)
+            .build()
     }
 }

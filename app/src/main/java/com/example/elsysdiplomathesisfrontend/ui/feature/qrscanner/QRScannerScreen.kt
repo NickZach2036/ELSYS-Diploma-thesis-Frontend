@@ -15,6 +15,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -45,7 +46,7 @@ fun QRScannerScreen(
     onScanned: (String) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
 
     val previewView = remember { PreviewView(context) }
@@ -109,14 +110,17 @@ fun QRScannerScreen(
 
 @Composable
 fun QRScannerScreenWithUI(
-    onQRScanned: () -> Unit, onLoginClicked: () -> Unit
+    onQRScanned: (String) -> Unit, onLoginClicked: () -> Unit
 ) {
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
         QRScannerScreen { scannedValue ->
-            Log.e("QRScanner", "Camera binding sucess")
-            onQRScanned()
+            Log.e("QRScanner", "Scanned: $scannedValue")
+            onQRScanned(scannedValue)
             Toast.makeText(context, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
         }
 
