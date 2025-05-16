@@ -11,6 +11,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserScreen
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerScreenWithUI
@@ -35,7 +37,7 @@ fun ThNavHost(navController: NavHostController) {
                 navController.navigate(Screen.STATION, bundleOf("stationId" to scannedValue))
 //                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
             }, onLoginClicked = {
-                navController.navigate(Screen.LOGIN)
+                navController.navigate(Screen.LANDMARK_BY_USER)
             })
         }
 
@@ -62,6 +64,17 @@ fun ThNavHost(navController: NavHostController) {
                         landmarkId
                     )
                 },
+            )
+        }
+
+        composable(Screen.LANDMARK_BY_USER) { backStack ->
+            val viewModel = getViewModel<LandmarkByUserViewModel>()
+            val state by viewModel.landmarkByUserData.collectAsStateWithLifecycle()
+
+            LandmarkByUserScreen(
+                stateValue = state,
+                onNameChange = { name -> viewModel.updateName(name) },
+                onDescriptionChange = { description -> viewModel.updateDescription(description) },
             )
         }
 

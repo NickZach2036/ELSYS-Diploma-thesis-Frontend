@@ -12,6 +12,7 @@ import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManagerImpl
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.CommentRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
@@ -62,6 +63,8 @@ val appModules = module {
     viewModel { SignUpViewModel(get()) }
 
     viewModel { StationViewModel(get(), get() ) }
+
+    viewModel { LandmarkByUserViewModel() }
 
     single <DataStoreManager> {
         DataStoreManagerImpl(androidContext().dataStore)
