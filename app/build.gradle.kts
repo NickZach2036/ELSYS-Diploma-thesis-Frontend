@@ -96,4 +96,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.converter)
 
     implementation(libs.material.icons)
+
+    implementation(libs.data.store)
+    implementation(libs.data.store.preferences)
 }

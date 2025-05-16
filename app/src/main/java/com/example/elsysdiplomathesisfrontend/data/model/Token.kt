@@ -4,5 +4,5 @@ import kotlinx.serialization.SerialName
 
 data class Token(
     @SerialName("token")
-    val accessToken: String
+    val token: String
 )

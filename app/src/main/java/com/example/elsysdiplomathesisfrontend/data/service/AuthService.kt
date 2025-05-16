@@ -10,5 +10,5 @@ interface AuthService {
     suspend fun login(@Body body: Login): Response<ApiResponse<Token>>
 
     @POST(APIConstants.REGISTER)
-    suspend fun register(@Body body: Login): ApiResponse<Token>
+    suspend fun register(@Body body: Login): Response<ApiResponse<Token>>
 }
