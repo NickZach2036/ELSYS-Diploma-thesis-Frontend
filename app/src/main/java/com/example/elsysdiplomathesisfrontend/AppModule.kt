@@ -14,7 +14,7 @@ import com.example.elsysdiplomathesisfrontend.domain.repository.CommentRepositor
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
-import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
+import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import okhttp3.OkHttpClient
@@ -56,7 +56,7 @@ val appModules = module {
         CommentRepositoryImpl(get())
     }
 
-    viewModel { DummyViewModel(get()) }
+    viewModel { QRScannerViewModel() }
 
     viewModel { LoginViewModel(get()) }
 
