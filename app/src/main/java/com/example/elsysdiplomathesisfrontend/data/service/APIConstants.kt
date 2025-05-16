@@ -5,3 +5,7 @@ object APIConstants {
     const val REGISTER = "auth/register"
     const val LANDMARKS = "landmarks"
 }
+
+object DataStoreKeys {
+    const val ACCESS_TOKEN = "ACCESS_TOKEN"
+}

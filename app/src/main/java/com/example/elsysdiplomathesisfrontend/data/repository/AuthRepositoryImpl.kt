@@ -1,19 +1,22 @@
 package com.example.elsysdiplomathesisfrontend.data.repository
 
-import android.util.Log
 import com.example.elsysdiplomathesisfrontend.data.model.Login
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
+import com.example.elsysdiplomathesisfrontend.data.service.DataStoreKeys
 import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManager
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 
-class AuthRepositoryImpl(private val authService: AuthService, private val dataStore: DataStoreManager) : AuthRepository {
+class AuthRepositoryImpl(
+    private val authService: AuthService,
+    private val dataStore: DataStoreManager
+) : AuthRepository {
     override suspend fun login(username: String, password: String): Result<Unit> {
         return try {
             val result = authService.login(Login(username, password))
             if (result.isSuccessful) {
                 val token = result.body()?.data?.token
                 if (token != null) {
-                    dataStore.setString("ACCESS_TOKEN", token)
+                    dataStore.setString(DataStoreKeys.ACCESS_TOKEN, token)
                     Result.success(Unit)
                 } else {
                     Result.failure(Throwable("No token in response"))
@@ -33,7 +36,7 @@ class AuthRepositoryImpl(private val authService: AuthService, private val dataS
             if (response.isSuccessful) {
                 val token = response.body()?.data?.token
                 if (token != null) {
-                    dataStore.setString("ACCESS_TOKEN", token)
+                    dataStore.setString(DataStoreKeys.ACCESS_TOKEN, token)
                     Result.success(Unit)
                 } else {
                     Result.failure(Throwable("No token in response"))

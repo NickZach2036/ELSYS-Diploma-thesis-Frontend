@@ -1,5 +1,6 @@
 package com.example.elsysdiplomathesisfrontend.data
 
+import com.example.elsysdiplomathesisfrontend.data.service.DataStoreKeys
 import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -16,7 +17,7 @@ class TokenInterceptor(private val dataStore: DataStoreManager) : Interceptor {
             ) {
                 requestBuilder.addHeader(
                     "Authorization",
-                    "Bearer ${dataStore.getString("ACCESS_TOKEN")}"
+                    "Bearer ${dataStore.getString(DataStoreKeys.ACCESS_TOKEN)}"
                 )
             }
 
