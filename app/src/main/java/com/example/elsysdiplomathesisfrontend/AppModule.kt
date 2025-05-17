@@ -64,7 +64,7 @@ val appModules = module {
 
     viewModel { StationViewModel(get(), get() ) }
 
-    viewModel { LandmarkByUserViewModel() }
+    viewModel { LandmarkByUserViewModel(get()) }
 
     single <DataStoreManager> {
         DataStoreManagerImpl(androidContext().dataStore)

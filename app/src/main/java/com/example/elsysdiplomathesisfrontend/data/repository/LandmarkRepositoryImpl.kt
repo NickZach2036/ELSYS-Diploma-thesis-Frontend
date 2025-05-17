@@ -1,6 +1,7 @@
 package com.example.elsysdiplomathesisfrontend.data.repository
 
 import com.example.elsysdiplomathesisfrontend.data.model.Landmark
+import com.example.elsysdiplomathesisfrontend.data.model.LandmarkByUser
 import com.example.elsysdiplomathesisfrontend.data.service.LandmarkService
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
 
@@ -18,6 +19,37 @@ class LandmarkRepositoryImpl(private val landmarkService: LandmarkService) : Lan
             } else {
                 Result.failure(
                     Throwable("Getting landmarks failed: ${result.errorBody()?.string()}")
+                )
+            }
+        } catch (e: Exception) {
+            Result.failure(Throwable(e.message))
+        }
+    }
+
+    override suspend fun userPostLandmark(
+        name: String,
+        description: String,
+        location: String,
+        stationId: Int
+    ): Result<Unit> {
+        return try {
+            val result = landmarkService.userPostLandmark(
+                LandmarkByUser(
+                    name = name,
+                    description = description,
+                    location = location,
+                    stationId = stationId
+                )
+            )
+            if (result.isSuccess) {
+                Result.success(Unit)
+            } else {
+                Result.failure(
+                    Throwable(
+                        "Creating landmarks failed: ${
+                            result.exceptionOrNull()?.message 
+                        }"
+                    )
                 )
             }
         } catch (e: Exception) {

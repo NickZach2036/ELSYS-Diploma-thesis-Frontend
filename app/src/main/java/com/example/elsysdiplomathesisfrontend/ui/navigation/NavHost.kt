@@ -37,7 +37,7 @@ fun ThNavHost(navController: NavHostController) {
                 navController.navigate(Screen.STATION, bundleOf("stationId" to scannedValue))
 //                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
             }, onLoginClicked = {
-                navController.navigate(Screen.LANDMARK_BY_USER)
+                navController.navigate(Screen.LOGIN)
             })
         }
 
@@ -75,6 +75,9 @@ fun ThNavHost(navController: NavHostController) {
                 stateValue = state,
                 onNameChange = { name -> viewModel.updateName(name) },
                 onDescriptionChange = { description -> viewModel.updateDescription(description) },
+                userAddLandmark = { viewModel.userAddLandmark() },
+                onDropdownVisibility = { isDropdownVisible -> viewModel.onVisibilityDropdownMenu(isDropdownVisible) },
+                onLandmarkClick = { stationId -> viewModel.onDropClick(stationId) }
             )
         }
 
@@ -102,7 +105,7 @@ fun ThNavHost(navController: NavHostController) {
                 onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
                 onSignUpClicked = {
                     navController.navigate(
-                        route = Screen.SIGN_UP
+                        route = Screen.LANDMARK_BY_USER
                     )
                 },
             )
