@@ -1,4 +1,4 @@
-package com.example.elsysdiplomathesisfrontend.ui.theme.feature.qrscanner
+package com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -9,8 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun DummyScreen(id: String) {
-    Column (Modifier.fillMaxSize().background(Color.Red)) {
-        Text(id, color = Color.White)
+fun DummyScreen(stateValue: String, id: String) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Red)
+    ) {
+        Text("$stateValue $id", color = Color.White)
     }
 }

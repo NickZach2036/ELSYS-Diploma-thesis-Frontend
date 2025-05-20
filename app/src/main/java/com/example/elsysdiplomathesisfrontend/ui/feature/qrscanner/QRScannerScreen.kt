@@ -1,10 +1,9 @@
-package com.example.elsysdiplomathesisfrontend.ui.theme.feature.qrscanner
+package com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner
 
 import android.util.Log
 import android.util.Size
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.camera.core.*
@@ -19,18 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.Screen
-import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.navigate
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import kotlinx.coroutines.launch
-import java.util.jar.Manifest
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
