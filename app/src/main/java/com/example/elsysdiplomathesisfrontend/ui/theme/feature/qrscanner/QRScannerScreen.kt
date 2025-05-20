@@ -1,4 +1,4 @@
-package qrscanner
+package com.example.elsysdiplomathesisfrontend.ui.theme.feature.qrscanner
 
 import android.util.Log
 import android.util.Size
@@ -22,7 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.Screen
+import com.example.elsysdiplomathesisfrontend.ui.theme.navigation.navigate
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.launch
@@ -103,20 +107,20 @@ fun QRScannerScreen(
 }
 
 @Composable
-fun QRScannerScreenWithUI(navController: NavController) {
+fun QRScannerScreenWithUI(onNavigate: () -> Unit) {
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         QRScannerScreen { scannedValue ->
+            Log.e("QRScanner", "Camera binding sucess")
+            onNavigate()
             Toast.makeText(context, "Scanned: $scannedValue", Toast.LENGTH_SHORT).show()
-            // Navigate or use scannedValue
+
         }
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .padding(top = 24.dp),
+                .align(Alignment.TopCenter),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Сканирайте QR код на метростанция", color = Color.White, fontWeight = FontWeight.Bold)
