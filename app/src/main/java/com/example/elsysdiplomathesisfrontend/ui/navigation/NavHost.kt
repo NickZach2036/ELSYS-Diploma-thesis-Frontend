@@ -14,6 +14,8 @@ import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewMo
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerScreenWithUI
+import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpScreen
+import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -56,9 +58,32 @@ fun ThNavHost(navController: NavHostController) {
                         route = Screen.QR_SCANNER
                     )
                 },
-                onUsernameChange = { viewModel.updateUsername(it) },
-                onPasswordChange = { viewModel.updatePassword(it) },
-                onVisibilityChange = { viewModel.updateVisibility(it) }
+                onUsernameChange = { username -> viewModel.updateUsername(username) },
+                onPasswordChange = { password -> viewModel.updatePassword(password) },
+                onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
+                onSignUpClicked = {
+                    navController.navigate(
+                        route = Screen.SIGN_UP
+                    )
+                },
+            )
+
+        }
+
+        composable(Screen.SIGN_UP) { backStack ->
+            val viewModel = getViewModel<SignUpViewModel>()
+            val state by viewModel.signUpData.collectAsStateWithLifecycle()
+
+            SignUpScreen(
+                stateValue = state,
+                onUsernameChange = { username -> viewModel.updateUsername(username) },
+                onPasswordChange = { password -> viewModel.updatePassword(password) },
+                onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
+                onSignUpClicked = {
+                    navController.navigate(
+                        route = Screen.QR_SCANNER
+                    )
+                },
             )
         }
     }

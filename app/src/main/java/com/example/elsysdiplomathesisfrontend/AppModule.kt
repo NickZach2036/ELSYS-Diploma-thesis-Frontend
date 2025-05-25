@@ -5,6 +5,7 @@ import com.example.elsysdiplomathesisfrontend.data.service.AuthService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
+import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -34,6 +35,8 @@ val appModules = module {
 
     viewModel { LoginViewModel() }
 
+    viewModel { SignUpViewModel() }
+
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -52,7 +55,7 @@ val appModules = module {
             explicitNulls = false
         }
 
-        Retrofit.Builder().baseUrl("http://192.168.2.250:8080/")
+        Retrofit.Builder().baseUrl("http://172.161.136.71:3000/")
             .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
