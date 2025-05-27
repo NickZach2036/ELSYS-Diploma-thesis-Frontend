@@ -5,4 +5,5 @@ object Screen {
     const val DUMMY = "dummy_screen"
     const val LOGIN = "login_screen"
     const val SIGN_UP = "signup_screen"
+    const val STATION = "station_screen"
 }

@@ -1,14 +1,15 @@
 package com.example.elsysdiplomathesisfrontend
 
 import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
+import com.example.elsysdiplomathesisfrontend.data.repository.LandmarkRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
+import com.example.elsysdiplomathesisfrontend.data.service.LandmarkService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
+import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -27,15 +28,25 @@ val appModules = module {
         get<Retrofit>().create(AuthService::class.java)
     }
 
-    factory<AuthRepository> {
-        AuthRepositoryImpl(get<AuthService>())
+    single<LandmarkService> {
+        get<Retrofit>().create(LandmarkService::class.java)
     }
 
-    viewModel { DummyViewModel(get<AuthRepository>()) }
+    factory<AuthRepository> {
+        AuthRepositoryImpl(get())
+    }
 
-    viewModel { LoginViewModel() }
+    factory<LandmarkRepository> {
+        LandmarkRepositoryImpl(get())
+    }
 
-    viewModel { SignUpViewModel() }
+    viewModel { DummyViewModel(get()) }
+
+    viewModel { LoginViewModel(get()) }
+
+    viewModel { SignUpViewModel(get()) }
+
+    viewModel { StationViewModel(get()) }
 
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
@@ -49,15 +60,11 @@ val appModules = module {
 
     single {
         val okHttpClient = get<OkHttpClient>()
-
-        val json = Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-        }
-
-        Retrofit.Builder().baseUrl("http://172.161.136.71:3000/")
-            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient)
+        Retrofit.Builder()
+            .baseUrl("http://172.161.136.71:3000/")
+            .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType())).build()
+            .client(okHttpClient)
+            .build()
     }
 }

@@ -1,21 +1,27 @@
 package com.example.elsysdiplomathesisfrontend.ui.navigation
 
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.camera.core.CameraXThreads.TAG
+import androidx.camera.core.processing.util.GLUtils.TAG
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
-import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyScreen
-import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerScreenWithUI
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
+import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationScreen
+import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -29,22 +35,32 @@ fun ThNavHost(navController: NavHostController) {
 
     ) {
         composable(Screen.QR_SCANNER) {
-            QRScannerScreenWithUI(onQRScanned = {
-                navController.navigate(
-                    route = Screen.DUMMY, args = bundleOf("id" to "123")
-                )
+            QRScannerScreenWithUI(onQRScanned = { scannedValue ->
+                navController.navigate(Screen.STATION, bundleOf("stationId" to scannedValue))
+//                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
             }, onLoginClicked = {
-                navController.navigate(
-                    route = Screen.LOGIN
-                )
+                navController.navigate(Screen.LOGIN)
             })
         }
 
-        composable(Screen.DUMMY) { backStack ->
-            val viewModel = getViewModel<DummyViewModel>()
-            val state by viewModel.text.collectAsStateWithLifecycle()
-            val value = backStack.arguments?.getString("id") ?: ""
-            DummyScreen(stateValue = state, id = value, login = { viewModel.login() })
+//        composable(Screen.DUMMY) { backStack ->
+//            val value = backStack.arguments?.getString("id") ?: ""
+//            DummyScreen(value)
+//        }
+
+        composable(Screen.STATION) { backStack ->
+            val stationId = backStack.arguments?.getString("stationId") ?: ""
+            val viewModel = getViewModel<StationViewModel>()
+            val state by viewModel.stationData.collectAsStateWithLifecycle()
+
+            LaunchedEffect(null) {
+                stationId.toIntOrNull()?.let { viewModel.loadStationData(it) }
+            }
+
+            StationScreen(
+                navController = navController,
+                stationData = state,
+            )
         }
 
         composable(Screen.LOGIN) { backStack ->
@@ -54,8 +70,16 @@ fun ThNavHost(navController: NavHostController) {
             LoginScreen(
                 stateValue = state,
                 onLoginClicked = {
-                    navController.navigate(
-                        route = Screen.QR_SCANNER
+                    viewModel.login(
+                        onSuccess = {
+                            navController.navigate(Screen.QR_SCANNER) {
+                                popUpTo(Screen.LOGIN) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        onError = { error ->
+                            Log.e("LoginScreen", "Login failed: $error")
+                        }
                     )
                 },
                 onUsernameChange = { username -> viewModel.updateUsername(username) },
@@ -80,8 +104,16 @@ fun ThNavHost(navController: NavHostController) {
                 onPasswordChange = { password -> viewModel.updatePassword(password) },
                 onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
                 onSignUpClicked = {
-                    navController.navigate(
-                        route = Screen.QR_SCANNER
+                    viewModel.register(
+                        onSuccess = {
+                            navController.navigate(Screen.QR_SCANNER) {
+                                popUpTo(Screen.SIGN_UP) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        },
+                        onError = { error ->
+                            Log.e("SignUpScreen", "Registration failed: $error")
+                        }
                     )
                 },
             )
