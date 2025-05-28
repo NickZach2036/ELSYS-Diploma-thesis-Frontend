@@ -1,10 +1,13 @@
 package com.example.elsysdiplomathesisfrontend
 
 import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
+import com.example.elsysdiplomathesisfrontend.data.repository.CommentRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.repository.LandmarkRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
+import com.example.elsysdiplomathesisfrontend.data.service.CommentService
 import com.example.elsysdiplomathesisfrontend.data.service.LandmarkService
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
+import com.example.elsysdiplomathesisfrontend.domain.repository.CommentRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
@@ -32,6 +35,10 @@ val appModules = module {
         get<Retrofit>().create(LandmarkService::class.java)
     }
 
+    single<CommentService> {
+        get<Retrofit>().create(CommentService::class.java)
+    }
+
     factory<AuthRepository> {
         AuthRepositoryImpl(get())
     }
@@ -40,13 +47,17 @@ val appModules = module {
         LandmarkRepositoryImpl(get())
     }
 
+    factory<CommentRepository> {
+        CommentRepositoryImpl(get())
+    }
+
     viewModel { DummyViewModel(get()) }
 
     viewModel { LoginViewModel(get()) }
 
     viewModel { SignUpViewModel(get()) }
 
-    viewModel { StationViewModel(get()) }
+    viewModel { StationViewModel(get(), get() ) }
 
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()

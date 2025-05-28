@@ -1,9 +1,6 @@
 package com.example.elsysdiplomathesisfrontend.ui.navigation
 
-import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.camera.core.CameraXThreads.TAG
-import androidx.camera.core.processing.util.GLUtils.TAG
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
@@ -11,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -60,6 +56,12 @@ fun ThNavHost(navController: NavHostController) {
             StationScreen(
                 navController = navController,
                 stationData = state,
+                bottomSheetVisibility = { isBottomScreenVisible, landmarkId ->
+                    viewModel.bottomSheetVisibility(
+                        isBottomScreenVisible,
+                        landmarkId
+                    )
+                },
             )
         }
 

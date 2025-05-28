@@ -4,4 +4,9 @@
     <string name="sign_up">Регистрирай се</string>
     <string name="username">потребителско име</string>
     <string name="password">парола</string>
+    <string name="comments">Коментари</string>
+    <string name="no_comments">Няма коментари</string>
+    <string name="close">Затвори</string>
+    <string name="location">Местоположение: %s</string>
+    <string name="distance_from_station">Разстояние от станция: </string>
 </resources>
