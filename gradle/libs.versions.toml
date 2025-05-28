@@ -26,6 +26,7 @@ converterGsonVersion = "2.9.0"
 converter_scalar_version = "2.1.0"
 kotlinx-serialization-json = "1.7.3"
 kotlinx-serialization-converter-version = "1.0.0"
+data_store_version = "1.1.1"
 
 [libraries]
 androidx-activity-compose-v172 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
@@ -65,6 +66,8 @@ converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", versi
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter-version" }
 material-icons = { module = "androidx.compose.material:material-icons-extended", version.ref = "material"}
+data-store = { group = "androidx.datastore", name = "datastore-core", version.ref = "data_store_version" }
+data-store-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data_store_version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

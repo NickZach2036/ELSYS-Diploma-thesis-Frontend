@@ -1,5 +1,6 @@
 package com.example.elsysdiplomathesisfrontend
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,9 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.datastore.dataStore
 import androidx.navigation.compose.rememberNavController
 import com.example.elsysdiplomathesisfrontend.ui.navigation.ThNavHost
 import com.example.elsysdiplomathesisfrontend.ui.theme.ElsysDiplomaThesisFrontendTheme
+
+val Context.dataStore by dataStore("app-settings.json", AppSettingsSerializer)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

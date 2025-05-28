@@ -1,11 +1,14 @@
 package com.example.elsysdiplomathesisfrontend
 
+import com.example.elsysdiplomathesisfrontend.data.TokenInterceptor
 import com.example.elsysdiplomathesisfrontend.data.repository.AuthRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.repository.CommentRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.repository.LandmarkRepositoryImpl
 import com.example.elsysdiplomathesisfrontend.data.service.AuthService
 import com.example.elsysdiplomathesisfrontend.data.service.CommentService
 import com.example.elsysdiplomathesisfrontend.data.service.LandmarkService
+import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManager
+import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManagerImpl
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.CommentRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
@@ -15,6 +18,7 @@ import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpView
 import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -40,7 +44,7 @@ val appModules = module {
     }
 
     factory<AuthRepository> {
-        AuthRepositoryImpl(get())
+        AuthRepositoryImpl(get(), get())
     }
 
     factory<LandmarkRepository> {
@@ -59,11 +63,17 @@ val appModules = module {
 
     viewModel { StationViewModel(get(), get() ) }
 
+    single <DataStoreManager> {
+        DataStoreManagerImpl(androidContext().dataStore)
+    }
+
     single<OkHttpClient> {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        OkHttpClient().newBuilder().addInterceptor(interceptor)
+        OkHttpClient().newBuilder()
+            .addInterceptor(interceptor)
+            .addInterceptor(TokenInterceptor(get<DataStoreManager>()))
             .connectTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS)
             .readTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS)
             .writeTimeout(RetrofitConstants.TIME, TimeUnit.SECONDS).build()
