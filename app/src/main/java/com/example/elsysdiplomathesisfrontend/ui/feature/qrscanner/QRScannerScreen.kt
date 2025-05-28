@@ -30,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -110,13 +109,17 @@ fun QRScannerScreen(
 
 @Composable
 fun QRScannerScreenWithUI(
-    onQRScanned: (String) -> Unit, onLoginClicked: () -> Unit
+    isLoggedIn: Boolean,
+    onQRScanned: (String) -> Unit,
+    onLoginClicked: () -> Unit,
+    onAddLandmarkClicked: () -> Unit
 ) {
     val context = LocalContext.current
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
         QRScannerScreen { scannedValue ->
             Log.e("QRScanner", "Scanned: $scannedValue")
@@ -136,13 +139,26 @@ fun QRScannerScreenWithUI(
         }
 
         Button(
-            onClick = { onLoginClicked() },
+            onClick = {
+                if (isLoggedIn) {
+                    onAddLandmarkClicked()
+                } else {
+                    onLoginClicked()
+                }
+            },
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue),
             enabled = true,
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            Text(stringResource(R.string.login), color = Color.White)
+            Text(
+                if (isLoggedIn) {
+                    stringResource(R.string.new_landmark_user)
+                } else {
+                    stringResource(R.string.login)
+                },
+                color = Color.White
+            )
         }
     }
 }

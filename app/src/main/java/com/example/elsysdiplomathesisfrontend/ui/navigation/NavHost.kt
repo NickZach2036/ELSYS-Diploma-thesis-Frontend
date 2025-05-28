@@ -11,9 +11,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserScreen
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerScreenWithUI
+import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpScreen
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationScreen
@@ -30,19 +33,21 @@ fun ThNavHost(navController: NavHostController) {
         popExitTransition = { ExitTransition.None }
 
     ) {
-        composable(Screen.QR_SCANNER) {
+        composable(Screen.QR_SCANNER) { backStack ->
+            val isLogged = backStack.arguments?.getBoolean("isLogged") ?: false
+            val viewModel = getViewModel<QRScannerViewModel>()
+            val state by viewModel.isLoggedIn.collectAsStateWithLifecycle()
+
+            LaunchedEffect(null) { viewModel.getState(isLogged) }
+
             QRScannerScreenWithUI(onQRScanned = { scannedValue ->
                 navController.navigate(Screen.STATION, bundleOf("stationId" to scannedValue))
-//                navController.navigate(Screen.DUMMY, bundleOf("id" to "123"))
             }, onLoginClicked = {
                 navController.navigate(Screen.LOGIN)
-            })
+            }, onAddLandmarkClicked = {
+                navController.navigate(Screen.LANDMARK_BY_USER)
+            }, isLoggedIn = state)
         }
-
-//        composable(Screen.DUMMY) { backStack ->
-//            val value = backStack.arguments?.getString("id") ?: ""
-//            DummyScreen(value)
-//        }
 
         composable(Screen.STATION) { backStack ->
             val stationId = backStack.arguments?.getString("stationId") ?: ""
@@ -65,6 +70,20 @@ fun ThNavHost(navController: NavHostController) {
             )
         }
 
+        composable(Screen.LANDMARK_BY_USER) { backStack ->
+            val viewModel = getViewModel<LandmarkByUserViewModel>()
+            val state by viewModel.landmarkByUserData.collectAsStateWithLifecycle()
+
+            LandmarkByUserScreen(
+                stateValue = state,
+                onNameChange = { name -> viewModel.updateName(name) },
+                onDescriptionChange = { description -> viewModel.updateDescription(description) },
+                userAddLandmark = { viewModel.userAddLandmark() },
+                onDropdownVisibility = { isDropdownVisible -> viewModel.onVisibilityDropdownMenu(isDropdownVisible) },
+                onLandmarkClick = { stationId -> viewModel.onDropClick(stationId) }
+            )
+        }
+
         composable(Screen.LOGIN) { backStack ->
             val viewModel = getViewModel<LoginViewModel>()
             val state by viewModel.loginData.collectAsStateWithLifecycle()
@@ -74,10 +93,7 @@ fun ThNavHost(navController: NavHostController) {
                 onLoginClicked = {
                     viewModel.login(
                         onSuccess = {
-                            navController.navigate(Screen.QR_SCANNER) {
-                                popUpTo(Screen.LOGIN) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                            navController.navigate(Screen.QR_SCANNER, bundleOf("isLogged" to true) )
                         },
                         onError = { error ->
                             Log.e("LoginScreen", "Login failed: $error")
@@ -89,7 +105,7 @@ fun ThNavHost(navController: NavHostController) {
                 onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
                 onSignUpClicked = {
                     navController.navigate(
-                        route = Screen.SIGN_UP
+                        route = Screen.LANDMARK_BY_USER
                     )
                 },
             )

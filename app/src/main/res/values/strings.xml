@@ -9,4 +9,9 @@
     <string name="close">Затвори</string>
     <string name="location">Местоположение: %s</string>
     <string name="distance_from_station">Разстояние от станция: </string>
+    <string name="new_landmark_user">Добави нова забележителност</string>
+    <string name="name">име</string>
+    <string name="description">описание</string>
+    <string name="add">Добави</string>
+    <string name="station_id">Station ID:</string>
 </resources>

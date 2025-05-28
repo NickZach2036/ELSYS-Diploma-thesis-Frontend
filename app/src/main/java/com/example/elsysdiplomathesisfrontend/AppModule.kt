@@ -12,8 +12,9 @@ import com.example.elsysdiplomathesisfrontend.data.store.DataStoreManagerImpl
 import com.example.elsysdiplomathesisfrontend.domain.repository.AuthRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.CommentRepository
 import com.example.elsysdiplomathesisfrontend.domain.repository.LandmarkRepository
+import com.example.elsysdiplomathesisfrontend.ui.feature.landmarkbyuserscreen.LandmarkByUserViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.loginscreen.LoginViewModel
-import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.DummyViewModel
+import com.example.elsysdiplomathesisfrontend.ui.feature.qrscanner.QRScannerViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.signupscreen.SignUpViewModel
 import com.example.elsysdiplomathesisfrontend.ui.feature.stationscreen.StationViewModel
 import okhttp3.OkHttpClient
@@ -55,13 +56,15 @@ val appModules = module {
         CommentRepositoryImpl(get())
     }
 
-    viewModel { DummyViewModel(get()) }
+    viewModel { QRScannerViewModel() }
 
     viewModel { LoginViewModel(get()) }
 
     viewModel { SignUpViewModel(get()) }
 
     viewModel { StationViewModel(get(), get() ) }
+
+    viewModel { LandmarkByUserViewModel(get()) }
 
     single <DataStoreManager> {
         DataStoreManagerImpl(androidContext().dataStore)

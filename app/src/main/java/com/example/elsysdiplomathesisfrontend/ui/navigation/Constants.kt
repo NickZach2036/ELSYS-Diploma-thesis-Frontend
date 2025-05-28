@@ -6,4 +6,5 @@ object Screen {
     const val LOGIN = "login_screen"
     const val SIGN_UP = "signup_screen"
     const val STATION = "station_screen"
+    const val LANDMARK_BY_USER = "landmark_by_user"
 }
