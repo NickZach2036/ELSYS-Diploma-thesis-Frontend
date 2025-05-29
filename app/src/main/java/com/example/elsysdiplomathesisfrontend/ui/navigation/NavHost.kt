@@ -105,7 +105,7 @@ fun ThNavHost(navController: NavHostController) {
                 onVisibilityChange = { isVisible -> viewModel.updateVisibility(isVisible) },
                 onSignUpClicked = {
                     navController.navigate(
-                        route = Screen.LANDMARK_BY_USER
+                        route = Screen.SIGN_UP
                     )
                 },
             )
@@ -124,10 +124,7 @@ fun ThNavHost(navController: NavHostController) {
                 onSignUpClicked = {
                     viewModel.register(
                         onSuccess = {
-                            navController.navigate(Screen.QR_SCANNER) {
-                                popUpTo(Screen.SIGN_UP) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                            navController.navigate(Screen.QR_SCANNER, bundleOf("isLogged" to true))
                         },
                         onError = { error ->
                             Log.e("SignUpScreen", "Registration failed: $error")
